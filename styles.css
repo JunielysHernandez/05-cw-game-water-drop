@@ -25,12 +25,29 @@ Fonts:
 }
 
 body {
+    position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+    align-items: flex-start; /* Align to top so you can scroll down */
+    min-height: 200vh;       /* Make the page much taller */
+    font-family: 'Nunito Sans';
+    color: #b38a00;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: url('img/wave.jpg') center center/cover no-repeat;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: rgba(46, 157, 247, 0.25); /* Light blue transparent overlay */
 }
 
 .game-wrapper {
@@ -59,12 +76,12 @@ body {
 
 #game-container {
     width: 800px;
-    height: 600px;
-    background-color: #e6f7ff;
+    height: 1000px; /* Make the game area taller */
+    background-color: rgba(46, 157, 247, 0.25);
     border: 2px solid #333;
     border-radius: 8px;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Keep drops inside the game area */
 }
 
 
@@ -90,16 +107,16 @@ body {
 
 .water-drop {
     position: absolute;
-    width: 60px;  /* increased from 40px */
-    height: 60px; /* increased from 40px */
-    background-color: #0099ff;
+    width: 60px;
+    height: 60px;
+    background: url('img/aqua.png') center center/contain no-repeat;
     border-radius: 50%;
     animation: dropFall linear forwards;
     transform-origin: center;
     cursor: pointer;
-    padding: 15px;  /* Add padding for larger click area */
-    margin: -15px;  /* Offset padding to maintain visual size */
-    transition: transform 0.1s ease;  /* Smooth hover effect */
+    padding: 0;
+    margin: 0;
+    transition: transform 0.1s ease;
 }
 
 .water-drop:hover {
@@ -142,4 +159,15 @@ body {
     #game-container {
         height: 70vh;
     }
+}
+
+#bucket {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: auto;
+    z-index: 2;
+    /* Remove pointer-events: none; so it can receive events if needed */
 }

@@ -43,3 +43,42 @@ function createDrop() {
     drop.remove(); // Clean up drops that weren't caught
   });
 }
+
+const bucket = document.getElementById("bucket");
+const gameContainer = document.getElementById("game-container");
+
+// Track bucket position as a percentage of game width
+let bucketX = 0.5; // 0 (left) to 1 (right)
+
+// Move bucket with mouse
+gameContainer.addEventListener("mousemove", (e) => {
+    const rect = gameContainer.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    // Clamp so bucket stays inside container
+    x = Math.max(0, Math.min(x, rect.width));
+    bucketX = x / rect.width;
+    updateBucketPosition();
+});
+
+// Move bucket with arrow keys
+document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+        bucketX = Math.max(0, bucketX - 0.03);
+        updateBucketPosition();
+    } else if (e.key === "ArrowRight") {
+        bucketX = Math.min(1, bucketX + 0.03);
+        updateBucketPosition();
+    }
+});
+
+function updateBucketPosition() {
+    const containerWidth = gameContainer.offsetWidth;
+    const bucketWidth = bucket.offsetWidth;
+    const x = bucketX * (containerWidth - bucketWidth);
+    bucket.style.left = `${x}px`;
+    bucket.style.transform = ""; // Remove translateX(-50%) for direct positioning
+}
+
+// Initialize bucket position on load
+window.addEventListener("resize", updateBucketPosition);
+window.addEventListener("DOMContentLoaded", updateBucketPosition);
