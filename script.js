@@ -9,6 +9,11 @@ const maxMisses = 10; // was 5, now 10
 
 let timeLeft = 30; // or your preferred starting time
 
+// Wind variables
+let windActive = false;
+let windDirection = 0; // -1 for left, 1 for right
+let windTimer;
+
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
 
@@ -25,6 +30,7 @@ function startGame() {
     // Create new drops every second (1000 milliseconds)
     createDrop(); // Create the first drop immediately
     dropMaker = setInterval(createDrop, 1000);
+    scheduleWind();
 }
 
 function createDrop() {
@@ -97,7 +103,15 @@ function createDrop() {
       return; // Stop checking
     }
 
-    // If drop is still in the DOM, keep checking
+    // Apply wind if active
+    if (windActive) {
+        let left = parseFloat(drop.style.left);
+        left += windDirection * 1.5; // Adjust speed as needed
+        // Keep drop within game area
+        left = Math.max(0, Math.min(left, gameContainer.offsetWidth - drop.offsetWidth));
+        drop.style.left = left + "px";
+    }
+
     if (drop.parentNode) {
       requestAnimationFrame(checkCollision);
     }
@@ -335,4 +349,48 @@ function updateTimer() {
         clearInterval(timerInterval);
         endGameByScore();
     }
+}
+
+function startWind() {
+    windActive = true;
+    windDirection = Math.random() < 0.5 ? -1 : 1;
+    // Show wind message (optional)
+    showWindMessage(windDirection);
+
+    // Wind lasts for 3 seconds
+    setTimeout(() => {
+        windActive = false;
+        windDirection = 0;
+        hideWindMessage();
+    }, 3000);
+}
+
+// Randomly trigger wind every 5–10 seconds
+function scheduleWind() {
+    const nextWind = Math.random() * 5000 + 5000;
+    windTimer = setTimeout(() => {
+        startWind();
+        scheduleWind();
+    }, nextWind);
+}
+
+function showWindMessage(dir) {
+    let msg = document.getElementById("wind-msg");
+    if (!msg) {
+        msg = document.createElement("div");
+        msg.id = "wind-msg";
+        msg.style.position = "absolute";
+        msg.style.top = "10px";
+        msg.style.left = "50%";
+        msg.style.transform = "translateX(-50%)";
+        msg.style.fontSize = "2rem";
+        msg.style.color = "#2E9DF7";
+        msg.style.zIndex = "1000";
+        gameContainer.appendChild(msg);
+    }
+    msg.textContent = dir === 1 ? "💨 Wind →" : "💨 Wind ←";
+}
+function hideWindMessage() {
+    const msg = document.getElementById("wind-msg");
+    if (msg) msg.remove();
 }
