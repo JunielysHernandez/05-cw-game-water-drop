@@ -466,3 +466,16 @@ button:hover, .cw-search:focus {
     pointer-events: none;
     user-select: none;
 }
+
+#wind-msg {
+    background: rgba(255,255,255,0.85);
+    border-radius: 12px;
+    padding: 8px 24px;
+    box-shadow: 0 2px 8px #2E9DF733;
+    font-weight: bold;
+    animation: windMsgPulse 0.5s alternate infinite;
+}
+@keyframes windMsgPulse {
+    from { background: rgba(255,255,255,0.85);}
+    to { background: #e0f7fa;}
+}

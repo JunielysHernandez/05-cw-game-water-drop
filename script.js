@@ -11,7 +11,7 @@ let timeLeft = 30; // or your preferred starting time
 
 // Wind variables
 let windActive = false;
-let windDirection = 0; // -1 for left, 1 for right
+let windDirection = 0;
 let windTimer;
 
 // Wait for button click to start the game
@@ -107,7 +107,6 @@ function createDrop() {
     if (windActive) {
         let left = parseFloat(drop.style.left);
         left += windDirection * 1.5; // Adjust speed as needed
-        // Keep drop within game area
         left = Math.max(0, Math.min(left, gameContainer.offsetWidth - drop.offsetWidth));
         drop.style.left = left + "px";
     }
@@ -354,10 +353,8 @@ function updateTimer() {
 function startWind() {
     windActive = true;
     windDirection = Math.random() < 0.5 ? -1 : 1;
-    // Show wind message (optional)
     showWindMessage(windDirection);
 
-    // Wind lasts for 3 seconds
     setTimeout(() => {
         windActive = false;
         windDirection = 0;
@@ -365,7 +362,6 @@ function startWind() {
     }, 3000);
 }
 
-// Randomly trigger wind every 5–10 seconds
 function scheduleWind() {
     const nextWind = Math.random() * 5000 + 5000;
     windTimer = setTimeout(() => {
