@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Water Drop Game</title>
+  <title>Water Drop! The Water Catching Game</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap" rel="stylesheet">
 </head>
@@ -18,21 +18,50 @@
       <a href="#">Newsletter</a>
       <a href="#">Funding</a>
       <a href="#">Contact Us!</a>
+    </div>
+    <div class="cw-search-wrapper">
       <input type="text" class="cw-search" placeholder="Search...">
+      <button class="cw-search-btn" aria-label="Search">
+        <img src="img/cw_logo.png" alt="Search" class="cw-search-icon">
+      </button>
     </div>
   </div>
   <div class="game-wrapper">
-    <h1 class="game-title">Water Drop</h1>
-    <p class="game-tagline">Catch the good drops, avoid the bad ones!</p>
+    <h1 class="game-title">Water Drop!</h1>
+    <p class="game-tagline">Catch the cute Aqua drops and avoid them hitting the floor!</p>
     <div class="score-panel">
-      <div class="score">Score: <span id="score">0</span></div>
-      <div class="timer">Time: <span id="time">30</span>s</div>
-      <button id="start-btn">Start Game</button>
+      <div class="score-timer-group">
+        <div class="score"><span id="score">0</span> pts</div>
+        <div class="timer"><span id="time">30</span>s</div>
+      </div>
+      <div class="score-btn-group">
+        <button id="start-btn">Start Game</button>
+        <button id="pause-btn">Pause</button>
+        <button id="reset-btn">Reset</button>
+      </div>
     </div>
     <div id="game-container">
       <img id="bucket" src="img/bucket.png" alt="Bucket">
     </div>
+    <button id="how-to-play-btn" class="info-btn">How to Play?</button>
+    <div id="how-to-play-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>How to Play</h2>
+        <ul>
+          <li>Move the bucket with your mouse or arrow keys.</li>
+          <li>Catch the Aqua drops to score points.</li>
+          <li>Try to beat your high score!</li>
+        </ul>
+      </div>
+    </div>
+    <div id="game-popup" class="modal" style="display:none;">
+      <div class="modal-content" id="game-popup-content"></div>
+    </div>
   </div>
+  <footer class="cw-footer">
+    <p>Learn more about <a href="https://www.charitywater.org/" target="_blank">charity: water</a>!</p>
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>

@@ -25,13 +25,16 @@ Fonts:
 }
 
 body {
-    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    background: linear-gradient(120deg, #e0f7fa 0%, #fffde4 100%);
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Align to top so you can scroll down */
-    min-height: 200vh;       /* Make the page much taller */
-    font-family: 'Nunito Sans';
-    color: #b38a00;
+    flex-direction: column;
+    align-items: center;
 }
 
 body::before {
@@ -91,7 +94,7 @@ body::after {
 .cw-nav-links a {
     text-decoration: none;
     color: #2E9DF7;
-    font-family: 'Nunito Sans', Arial, sans-serif;
+    font-family: 'Nunito Sans', Comfortaa, Quicksand;
     font-weight: 700;
     font-size: 1rem;
     padding: 6px 12px;
@@ -104,12 +107,16 @@ body::after {
     color: #fff;
 }
 
+.cw-search-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
 .cw-search {
-    padding: 6px 12px;
+    padding: 6px 36px 6px 12px; /* Add right padding for the icon */
     border: 1px solid #2E9DF7;
     border-radius: 6px;
     font-size: 1rem;
-    margin-left: 10px;
     outline: none;
     transition: border 0.2s;
 }
@@ -118,131 +125,69 @@ body::after {
     border: 2px solid #FFC907;
 }
 
-.game-wrapper {
-    margin-top: 120px; /* Increased from 80px for more separation */
-}.cw-navbar {
-    width: 100vw;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 0 0 0 0;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 2px 8px 0 rgba(46, 157, 247, 0.08);
-    z-index: 100;
-    height: 64px;
-}
-
-.cw-logo-box {
-    /* Remove background and box-shadow */
-    padding: 8px 24px 8px 32px;
-    display: flex;
-    align-items: center;
-    height: 48px;
-    margin-left: 12px;
+.cw-search-btn {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
-    box-shadow: none;
-}
-
-.cw-logo {
-    height: 40px;
-    width: auto;
-    display: block;
-}
-
-.cw-nav-links {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    height: 28px;
+    width: 28px;
     display: flex;
     align-items: center;
-    gap: 18px;
-    margin-right: 32px;
+    justify-content: center;
 }
 
-.cw-nav-links a {
-    text-decoration: none;
-    color: #2E9DF7;
-    font-family: 'Nunito Sans', Arial, sans-serif;
-    font-weight: 700;
+.cw-search-icon {
+    height: 22px;
+    width: 22px;
+    opacity: 0.7;
+}
+
+button, .cw-search {
+    font-family: inherit;
     font-size: 1rem;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 6px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(46,157,247,0.08);
 }
 
-.cw-nav-links a:hover {
+button:hover, .cw-search:focus {
     background: #2E9DF7;
     color: #fff;
-}
-
-.cw-search {
-    padding: 6px 12px;
-    border: 1px solid #2E9DF7;
-    border-radius: 6px;
-    font-size: 1rem;
-    margin-left: 10px;
     outline: none;
-    transition: border 0.2s;
-}
-
-.cw-search:focus {
-    border: 2px solid #FFC907;
 }
 
 .game-wrapper {
-    margin-top: 120px; /* Increased from 80px for more separation */
-}
-.cw-logo-bar {
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    padding: 24px 0 8px 32px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: transparent;
-    z-index: 100;
-}
-
-.cw-logo {
-    height: 40px;
-    width: auto;
-    display: block;
-}
-
-.game-wrapper {
+    margin-top: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    margin-top: 60px; /* Add space so game isn't hidden under logo bar */
-}
-
-.score-panel {
-    display: flex;
-    justify-content: space-between;  /* Space between score and button */
-    align-items: center;
-    width: 400px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.timer {
-    flex: 0 1 auto;
-    font-size: 24px;
-    font-weight: bold;
+    gap: 24px;
 }
 
 #game-container {
-    width: 400px;
-    height: 600px;
-    background-color: rgba(46, 157, 247, 0.25);
-    border: 2px solid #333;
-    border-radius: 8px;
+    margin-top: 40px;
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    box-shadow: 0 8px 32px rgba(46,157,247,0.10);
+    border-radius: 18px;
+    padding-bottom: 24px;
+    width: 700px;
+    height: 350px;
+    background-color: rgba(46, 157, 247, 0.15);
+    border: 2px solid #2E9DF7;
+    border-radius: 12px;
     position: relative;
-    overflow: hidden; /* Keep drops inside the game area */
+    overflow: hidden;
+    margin: 0 auto;
+    margin-top: 32px;
+    margin-bottom: 32px;
 }
 
 
@@ -260,48 +205,92 @@ body::after {
     background-color: #45a049;
 }
 
+.score-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    background: linear-gradient(90deg, #e0f7fa 60%, #8BD1CB 100%);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(46,157,247,0.10);
+    padding: 18px 36px;
+    margin-bottom: 24px;
+    border: 2px solid #2E9DF7;
+    min-width: 340px;
+    max-width: 420px;
+}
+
+.score-timer-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
 .score {
-    flex: 0 1 auto;  /* Don't grow, can shrink, auto basis */
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bold;
+    color: #2E9DF7;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px #b2ebf2;
 }
 
-.water-drop {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    background: url('img/aqua.png') center center/contain no-repeat;
-    border-radius: 50%;
-    animation: dropFall linear forwards;
-    transform-origin: center;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    transition: transform 0.1s ease;
-    z-index: 10; /* Make sure drops are in front */
+.timer {
+    font-size: 1.2rem;
+    color: #159A48;
+    font-weight: 600;
 }
 
-.water-drop:hover {
-    transform: scale(1.1);  /* Slight grow effect on hover */
+.score-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.bad-drop {
-    background-color: #ff4444;
+#start-btn, #pause-btn {
+    width: 120px;
+    padding: 8px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(46,157,247,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+
+#start-btn {
+    background: #2E9DF7;
+    color: #fff;
+}
+
+#start-btn:hover {
+    background: #FFC907;
+    color: #222;
+}
+
+#pause-btn {
+    background: #FFC907;
+    color: #222;
+}
+
+#pause-btn:hover {
+    background: #2E9DF7;
+    color: #fff;
 }
 
 .game-title {
-    color: #131313;
-    font-size: 48px;
-    margin-top: 0;
-    margin-bottom: 5px;  /* reduced from 20px */
-    text-align: center;
+    font-size: 2.5rem;
+    color: #2E9DF7;
+    margin-bottom: 0.2em;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 8px #b2ebf2;
 }
 
 .game-tagline {
-    color: #666;
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
+    font-size: 1.2rem;
+    color: #159A48;
+    margin-bottom: 1em;
+    font-weight: 600;
 }
 
 @keyframes dropFall {
@@ -323,12 +312,50 @@ body::after {
     }
 }
 
+@media (max-width: 800px) {
+    #game-container {
+        width: 95vw;
+        min-width: 220px;
+        height: 60vw;
+        min-height: 200px;
+    }
+    .game-wrapper {
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 600px) {
+  #game-container, .game-area {
+    width: 95vw;
+    min-width: 180px;
+    height: 60vw;
+    min-height: 160px;
+    margin-top: 20px;
+  }
+  .score-panel, .buttons {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+  }
+  .game-title {
+    font-size: 1.3rem;
+    margin-top: 12px;
+  }
+  .cw-navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 0;
+  }
+}
+
 #bucket {
     position: absolute;
     bottom: 10px;
-    width: 120px;
+    width: 90px;
     height: auto;
-    z-index: 2; /* Lower than .water-drop */
+    z-index: 2;
 }
 
 .splash {
@@ -350,4 +377,92 @@ body::after {
     0% { opacity: 1; transform: scale(0.5) translateY(0); }
     80% { opacity: 1; transform: scale(1.2) translateY(-10px);}
     100% { opacity: 0; transform: scale(1) translateY(0);}
+}
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-content {
+    background: #fff;
+    padding: 32px 24px;
+    border-radius: 12px;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    position: relative;
+}
+.close-modal {
+    position: absolute;
+    top: 12px; right: 16px;
+    font-size: 2rem;
+    color: #2E9DF7;
+    cursor: pointer;
+}
+.info-btn {
+    margin-bottom: 16px;
+    background: #2E9DF7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#pause-btn {
+    margin-left: 10px;
+    background: #FFC907;
+    color: #222;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#reset-btn {
+    background: #F5402C;
+    color: #fff;
+    margin-top: 6px;
+}
+#reset-btn:hover {
+    background: #2E9DF7;
+    color: #fff;
+}
+
+@keyframes bucketBounce {
+    0% { transform: scale(1);}
+    30% { transform: scale(1.1);}
+    60% { transform: scale(0.95);}
+    100% { transform: scale(1);}
+}
+.bucket-bounce {
+    animation: bucketBounce 0.3s;
+}
+
+.cw-footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #888;
+    font-size: 1rem;
+}
+.cw-footer a {
+    color: #2E9DF7;
+    text-decoration: underline;
+}
+
+.water-drop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
 }
