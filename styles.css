@@ -49,19 +49,180 @@ body::after {
     z-index: -1;
     background: rgba(46, 157, 247, 0.25); /* Light blue transparent overlay */
 }
+.cw-navbar {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0 0 0 0;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px 0 rgba(46, 157, 247, 0.08);
+    z-index: 100;
+    height: 64px;
+}
+
+.cw-logo-box {
+    /* Remove background and box-shadow */
+    padding: 8px 24px 8px 32px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    margin-left: 12px;
+    background: none;
+    box-shadow: none;
+}
+
+.cw-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.cw-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-right: 32px;
+}
+
+.cw-nav-links a {
+    text-decoration: none;
+    color: #2E9DF7;
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.cw-nav-links a:hover {
+    background: #2E9DF7;
+    color: #fff;
+}
+
+.cw-search {
+    padding: 6px 12px;
+    border: 1px solid #2E9DF7;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-left: 10px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.cw-search:focus {
+    border: 2px solid #FFC907;
+}
+
+.game-wrapper {
+    margin-top: 120px; /* Increased from 80px for more separation */
+}.cw-navbar {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0 0 0 0;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px 0 rgba(46, 157, 247, 0.08);
+    z-index: 100;
+    height: 64px;
+}
+
+.cw-logo-box {
+    /* Remove background and box-shadow */
+    padding: 8px 24px 8px 32px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    margin-left: 12px;
+    background: none;
+    box-shadow: none;
+}
+
+.cw-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.cw-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-right: 32px;
+}
+
+.cw-nav-links a {
+    text-decoration: none;
+    color: #2E9DF7;
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.cw-nav-links a:hover {
+    background: #2E9DF7;
+    color: #fff;
+}
+
+.cw-search {
+    padding: 6px 12px;
+    border: 1px solid #2E9DF7;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-left: 10px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.cw-search:focus {
+    border: 2px solid #FFC907;
+}
+
+.game-wrapper {
+    margin-top: 120px; /* Increased from 80px for more separation */
+}
+.cw-logo-bar {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    padding: 24px 0 8px 32px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: transparent;
+    z-index: 100;
+}
+
+.cw-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
 
 .game-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    margin-top: 60px; /* Add space so game isn't hidden under logo bar */
 }
 
 .score-panel {
     display: flex;
     justify-content: space-between;  /* Space between score and button */
     align-items: center;
-    width: 800px;
+    width: 400px;
     padding: 10px;
     background-color: #fff;
     border-radius: 8px;
@@ -75,8 +236,8 @@ body::after {
 }
 
 #game-container {
-    width: 800px;
-    height: 1000px; /* Make the game area taller */
+    width: 400px;
+    height: 600px;
     background-color: rgba(46, 157, 247, 0.25);
     border: 2px solid #333;
     border-radius: 8px;
@@ -117,6 +278,7 @@ body::after {
     padding: 0;
     margin: 0;
     transition: transform 0.1s ease;
+    z-index: 10; /* Make sure drops are in front */
 }
 
 .water-drop:hover {
@@ -147,7 +309,7 @@ body::after {
         transform: translateY(-20px);
     }
     to {
-        transform: translateY(600px);
+        transform: translateY(520px); /* 600px container - 60px drop - 20px margin above bucket */
     }
 }
 
@@ -164,10 +326,28 @@ body::after {
 #bucket {
     position: absolute;
     bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
     width: 120px;
     height: auto;
-    z-index: 2;
-    /* Remove pointer-events: none; so it can receive events if needed */
+    z-index: 2; /* Lower than .water-drop */
+}
+
+.splash {
+    position: absolute;
+    width: 40px;
+    height: 18px;
+    left: 0;
+    bottom: 0;
+    background: #8bd1cb;
+    border-radius: 50% 50% 60% 60%;
+    box-shadow: 0 2px 8px 2px #2e9df7aa;
+    pointer-events: none;
+    z-index: 20;
+    animation: splashAnim 0.5s linear forwards;
+    opacity: 0.8;
+}
+
+@keyframes splashAnim {
+    0% { opacity: 1; transform: scale(0.5) translateY(0); }
+    80% { opacity: 1; transform: scale(1.2) translateY(-10px);}
+    100% { opacity: 0; transform: scale(1) translateY(0);}
 }
