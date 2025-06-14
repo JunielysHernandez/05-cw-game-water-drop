@@ -25,16 +25,10 @@ Fonts:
 }
 
 body {
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    background: #e0f7fa;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    width: 100vw;
-    box-sizing: border-box;
-    font-family: 'Nunito Sans', Arial, sans-serif;
-    background: linear-gradient(120deg, #77A8BB 0%, #fff7e1 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 body::before {
@@ -227,6 +221,11 @@ button:hover, .cw-search:focus {
 }
 
 .score-panel {
+    text-align: center;
+    margin: 20px auto;
+}
+
+.score-panel {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -376,13 +375,22 @@ button:hover, .cw-search:focus {
 #bucket {
     position: absolute;
     bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
     width: 90px;
     height: auto;
     z-index: 20;
     user-select: none;
     pointer-events: none;
+}
+
+.water-drop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
 }
 
 .splash {
@@ -409,7 +417,7 @@ button:hover, .cw-search:focus {
 .modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a1a1a;
+    background: rgba(0,0,0,0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -421,7 +429,7 @@ button:hover, .cw-search:focus {
     border-radius: 12px;
     max-width: 350px;
     text-align: center;
-    box-shadow: 0 4px 24px #cbccd1;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
     position: relative;
 }
 .close-modal {
@@ -457,7 +465,11 @@ button:hover, .cw-search:focus {
 #reset-btn {
     background: #F5402C;
     color: #fff;
-    margin-top: 6px;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 #reset-btn:hover {
     background: #FF7F70; /* lighter red */
@@ -495,4 +507,13 @@ button:hover, .cw-search:focus {
     pointer-events: none;
     user-select: none;
     /* No background or border-radius here! */
+    #bucket {
+    position: absolute;
+    bottom: 10px;
+    width: 90px;
+    height: auto;
+    z-index: 20;
+    user-select: none;
+    pointer-events: none;
+}
 }

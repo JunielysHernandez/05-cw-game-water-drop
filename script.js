@@ -19,50 +19,39 @@ const pauseBtn = document.getElementById('pause-btn');
 const resetBtn = document.getElementById('reset-btn');
 const bucket = document.getElementById("bucket");
 
-// --- EVENT LISTENERS ---
+// --- GAME CONTROL BUTTONS ---
 
 startBtn.addEventListener("click", startGame);
 
-pauseBtn.addEventListener("click", () => {
+pauseBtn.addEventListener("click", function() {
     if (!gameRunning) return;
     gamePaused = !gamePaused;
     if (gamePaused) {
         clearInterval(dropMaker);
         clearInterval(timerInterval);
-        pauseBtn.textContent = "Resume";
+        this.textContent = "Resume";
     } else {
         dropMaker = setInterval(createDrop, 1000);
         timerInterval = setInterval(updateTimer, 1000);
-        pauseBtn.textContent = "Pause";
-    }
-});
+                this.textContent = "Pause";
+            }
+        });
 
-resetBtn.addEventListener("click", resetGame);
-
-gameContainer.addEventListener("mousemove", (e) => {
-    const rect = gameContainer.getBoundingClientRect();
-    const bucketWidth = bucket.offsetWidth;
-    let x = e.clientX - rect.left;
-    x = Math.max(0, Math.min(x, rect.width));
-    bucketX = x / rect.width;
+resetBtn.addEventListener("click", function() {
+    gameRunning = false;
+    gamePaused = false;
+    clearInterval(dropMaker);
+    clearInterval(timerInterval);
+    clearTimeout(windTimer);
+    document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
+    document.getElementById("score").textContent = "0";
+    document.getElementById("time").textContent = "30";
+    missedDrops = 0;
+    bucketX = 0.5;
     updateBucketPosition();
 });
 
-document.addEventListener("keydown", (e) => {
-    const step = 0.03;
-    if (e.key === "ArrowLeft") {
-        bucketX = Math.max(0, bucketX - step);
-        updateBucketPosition();
-    } else if (e.key === "ArrowRight") {
-        bucketX = Math.min(1, bucketX + step);
-        updateBucketPosition();
-    }
-});
-
-window.addEventListener("resize", updateBucketPosition);
-window.addEventListener("DOMContentLoaded", updateBucketPosition);
-
-// --- MAIN GAME FUNCTIONS ---
+// --- GAME LOGIC ---
 
 function startGame() {
     if (gameRunning) return;
@@ -130,9 +119,10 @@ function createDrop() {
             drop.style.left = left + "px";
         }
 
+        // Collision detection
         if (checkDropCaught(drop)) {
             drop.remove();
-            const scoreElem = document.getElementById("score");
+            let scoreElem = document.getElementById("score");
             let score = parseInt(scoreElem.textContent, 10) || 0;
             scoreElem.textContent = score + 1;
             return;
@@ -144,7 +134,7 @@ function createDrop() {
             if (drop.parentNode) {
                 showSplash(drop);
                 drop.remove();
-                const scoreElem = document.getElementById("score");
+                let scoreElem = document.getElementById("score");
                 let score = parseInt(scoreElem.textContent, 10) || 0;
                 score = Math.max(0, score - 1);
                 scoreElem.textContent = score;
@@ -189,6 +179,7 @@ function endGame(message) {
     gameRunning = false;
     clearInterval(dropMaker);
     clearInterval(timerInterval);
+    clearTimeout(windTimer);
     document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
     showLosePopup(message);
     missedDrops = 0;
@@ -198,8 +189,9 @@ function endGameByScore() {
     gameRunning = false;
     clearInterval(dropMaker);
     clearInterval(timerInterval);
+    clearTimeout(windTimer);
     document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
-    const score = parseInt(document.getElementById("score").textContent, 10) || 0;
+    let score = parseInt(document.getElementById("score").textContent, 10) || 0;
     if (score >= 20) {
         showWinCelebration();
     } else {
@@ -207,21 +199,8 @@ function endGameByScore() {
     }
 }
 
-function resetGame() {
-    gameRunning = false;
-    gamePaused = false;
-    clearInterval(dropMaker);
-    clearInterval(timerInterval);
-    document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
-    document.getElementById("score").textContent = "0";
-    document.getElementById("time").textContent = "30";
-    missedDrops = 0;
-    bucketX = 0.5;
-    updateBucketPosition();
-    pauseBtn.textContent = "Pause";
-}
+// --- WIND ---
 
-// --- WIND EFFECT ---
 function startWind() {
     windActive = true;
     windDirection = Math.random() < 0.5 ? -1 : 1;
@@ -232,7 +211,6 @@ function startWind() {
         hideWindMessage();
     }, 3000);
 }
-
 function scheduleWind() {
     const nextWind = Math.random() * 5000 + 5000;
     windTimer = setTimeout(() => {
@@ -240,7 +218,6 @@ function scheduleWind() {
         scheduleWind();
     }, nextWind);
 }
-
 function showWindMessage(dir) {
     let msg = document.getElementById("wind-msg");
     if (!msg) {
@@ -257,27 +234,63 @@ function showWindMessage(dir) {
     }
     msg.textContent = dir === 1 ? "💨 Wind →" : "💨 Wind ←";
 }
-
 function hideWindMessage() {
     const msg = document.getElementById("wind-msg");
     if (msg) msg.remove();
 }
 
 // --- BUCKET MOVEMENT ---
+
+// MOUSE MOVEMENT
+gameContainer.addEventListener("mousemove", (e) => {
+    const rect = gameContainer.getBoundingClientRect();
+    const bucketWidth = bucket.offsetWidth;
+    const containerWidth = gameContainer.offsetWidth;
+    const maxX = containerWidth - bucketWidth;
+
+    // Center the bucket under the mouse
+    let x = e.clientX - rect.left - bucketWidth / 2;
+
+    // Clamp x between 0 and maxX
+    x = Math.max(0, Math.min(x, maxX));
+
+    // Store bucketX as a fraction between 0 and 1
+    bucketX = x / maxX;
+
+    updateBucketPosition();
+});
+
+// KEYBOARD MOVEMENT (unchanged, but ensure bucketX stays between 0 and 1)
+document.addEventListener("keydown", (e) => {
+    const step = 0.05;
+    if (e.key === "ArrowLeft") {
+        bucketX = Math.max(0, bucketX - step);
+    } else if (e.key === "ArrowRight") {
+        bucketX = Math.min(1, bucketX + step);
+    }
+    updateBucketPosition();
+});
+
+// UPDATE BUCKET POSITION
 function updateBucketPosition() {
     const containerWidth = gameContainer.offsetWidth;
     const bucketWidth = bucket.offsetWidth;
-    const x = bucketX * (containerWidth - bucketWidth);
+    const maxX = containerWidth - bucketWidth;
+    const x = bucketX * maxX;
     bucket.style.left = `${x}px`;
+    bucket.style.transform = "";
 }
+window.addEventListener("resize", updateBucketPosition);
+window.addEventListener("DOMContentLoaded", updateBucketPosition);
 
-// --- POPUPS ---
+// --- WIN/LOSE POPUPS ---
+
 function showWinCelebration() {
     if (typeof confetti === "function") {
         confetti({
-            particleCount: 120,
-            spread: 90,
-            origin: { y: 0.6 }
+          particleCount: 120,
+          spread: 90,
+          origin: { y: 0.6 }
         });
     }
     const popup = document.getElementById('game-popup');
@@ -292,7 +305,6 @@ function showWinCelebration() {
         popup.style.display = 'none';
     };
 }
-
 function showLosePopup(message) {
     const popup = document.getElementById('game-popup');
     const content = document.getElementById('game-popup-content');
@@ -301,8 +313,39 @@ function showLosePopup(message) {
         <button id="restart-btn" style="margin-top:18px;padding:10px 24px;background:#FFC907;color:#222;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">Restart</button>
     `;
     popup.style.display = 'flex';
-    document.getElementById('restart-btn').onclick = () => {
-        popup.style.display = 'none';
-        resetGame();
-    };
+        document.getElementById('restart-btn').onclick = () => {
+            popup.style.display = 'none';
+            resetBtn.click();
+        };
+    }
+gameContainer.addEventListener("mousemove", (e) => {
+    const rect = gameContainer.getBoundingClientRect();
+    const bucketWidth = bucket.offsetWidth;
+    const containerWidth = gameContainer.offsetWidth;
+    const maxX = containerWidth - bucketWidth;
+
+    // Center the bucket under the mouse
+    let x = e.clientX - rect.left - bucketWidth / 2;
+
+    // Clamp x between 0 and maxX
+    x = Math.max(0, Math.min(x, maxX));
+
+    // Store bucketX as a fraction between 0 and 1
+    bucketX = x / maxX;
+
+    updateBucketPosition();
+});function updateBucketPosition() {
+    const containerWidth = gameContainer.offsetWidth;
+    const bucketWidth = bucket.offsetWidth;
+    const maxX = containerWidth - bucketWidth;
+    const x = bucketX * maxX;
+    bucket.style.left = `${x}px`;
+    bucket.style.transform = "";
+}function updateBucketPosition() {
+    const containerWidth = gameContainer.offsetWidth;
+    const bucketWidth = bucket.offsetWidth;
+    const maxX = containerWidth - bucketWidth;
+    const x = bucketX * maxX;
+    bucket.style.left = `${x}px`;
+    bucket.style.transform = "";
 }
