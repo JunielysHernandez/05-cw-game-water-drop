@@ -31,7 +31,7 @@ body {
     width: 100vw;
     box-sizing: border-box;
     font-family: 'Nunito Sans', Arial, sans-serif;
-    background: linear-gradient(120deg, #e0f7fa 0%, #fffde4 100%);
+    background: linear-gradient(120deg, #77A8BB 0%, #fff7e1 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -50,7 +50,8 @@ body::after {
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: rgba(46, 157, 247, 0.25); /* Light blue transparent overlay */
+    background: #003366; /* Light blue transparent overlay */
+    opacity: 0.2;
 }
 .cw-navbar {
     width: 100vw;
@@ -61,8 +62,8 @@ body::after {
     top: 0;
     left: 0;
     padding: 0 0 0 0;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 2px 8px 0 rgba(46, 157, 247, 0.08);
+    background: #FFC907;
+    box-shadow: 0 2px 8px 0 #fff7e1;
     z-index: 100;
     height: 64px;
 }
@@ -93,7 +94,7 @@ body::after {
 
 .cw-nav-links a {
     text-decoration: none;
-    color: #2E9DF7;
+    color: #003366;
     font-family: 'Nunito Sans', Comfortaa, Quicksand;
     font-weight: 700;
     font-size: 1rem;
@@ -103,7 +104,7 @@ body::after {
 }
 
 .cw-nav-links a:hover {
-    background: #2E9DF7;
+    background: #003366;
     color: #fff;
 }
 
@@ -114,7 +115,7 @@ body::after {
 
 .cw-search {
     padding: 6px 36px 6px 12px; /* Add right padding for the icon */
-    border: 1px solid #2E9DF7;
+    border: 1px solid #77A8BB;
     border-radius: 6px;
     font-size: 1rem;
     outline: none;
@@ -155,11 +156,11 @@ button, .cw-search {
     padding: 10px 20px;
     margin: 0 6px;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(46,157,247,0.08);
+    box-shadow: 0 2px 8px #1a1a1a;
 }
 
 button:hover, .cw-search:focus {
-    background: #2E9DF7;
+    background: #003366;
     color: #fff;
     outline: none;
 }
@@ -193,7 +194,7 @@ button:hover, .cw-search:focus {
 
 #start-btn {
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #003366;
     color: white;
     border: none;
     border-radius: 4px;
@@ -202,7 +203,8 @@ button:hover, .cw-search:focus {
 }
 
 #start-btn:hover {
-    background-color: #45a049;
+    background: #6EC6FF; /* a lighter blue */
+    color: #fff;
 }
 
 .score-panel {
@@ -237,7 +239,7 @@ button:hover, .cw-search:focus {
 
 .timer {
     font-size: 1.2rem;
-    color: #159A48;
+    color: #adcaad;
     font-weight: 600;
 }
 
@@ -254,7 +256,7 @@ button:hover, .cw-search:focus {
     font-weight: bold;
     border-radius: 8px;
     border: none;
-    box-shadow: 0 2px 8px rgba(46,157,247,0.08);
+    box-shadow: 0 2px 8px #2e9df714;
     transition: background 0.2s, color 0.2s;
 }
 
@@ -264,8 +266,8 @@ button:hover, .cw-search:focus {
 }
 
 #start-btn:hover {
-    background: #FFC907;
-    color: #222;
+    background: #6EC6FF; /* a lighter blue */
+    color: #fff;
 }
 
 #pause-btn {
@@ -274,8 +276,8 @@ button:hover, .cw-search:focus {
 }
 
 #pause-btn:hover {
-    background: #2E9DF7;
-    color: #fff;
+    background: #FFE066; /* lighter yellow */
+    color: #222;
 }
 
 .game-title {
@@ -288,7 +290,7 @@ button:hover, .cw-search:focus {
 
 .game-tagline {
     font-size: 1.2rem;
-    color: #159A48;
+    color: #fed8c1;
     margin-bottom: 1em;
     font-weight: 600;
 }
@@ -382,7 +384,7 @@ button:hover, .cw-search:focus {
 .modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.4);
+    background: #1a1a1a;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -394,19 +396,19 @@ button:hover, .cw-search:focus {
     border-radius: 12px;
     max-width: 350px;
     text-align: center;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 24px #cbccd1;
     position: relative;
 }
 .close-modal {
     position: absolute;
     top: 12px; right: 16px;
     font-size: 2rem;
-    color: #2E9DF7;
+    color: #77A8BB;
     cursor: pointer;
 }
 .info-btn {
     margin-bottom: 16px;
-    background: #2E9DF7;
+    background: #003366;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -428,12 +430,12 @@ button:hover, .cw-search:focus {
 }
 
 #reset-btn {
-    background: #F5402C;
+    background: #bf6c46;
     color: #fff;
     margin-top: 6px;
 }
 #reset-btn:hover {
-    background: #2E9DF7;
+    background: #c28a73; /* lighter red */
     color: #fff;
 }
 
@@ -454,7 +456,7 @@ button:hover, .cw-search:focus {
     font-size: 1rem;
 }
 .cw-footer a {
-    color: #2E9DF7;
+    color: #bf6c46;
     text-decoration: underline;
 }
 
@@ -468,14 +470,14 @@ button:hover, .cw-search:focus {
 }
 
 #wind-msg {
-    background: rgba(255,255,255,0.85);
+    background: #ffffffd9;
     border-radius: 12px;
     padding: 8px 24px;
-    box-shadow: 0 2px 8px #2E9DF733;
+    box-shadow: 0 2px 8px #b2ebf2;
     font-weight: bold;
     animation: windMsgPulse 0.5s alternate infinite;
 }
 @keyframes windMsgPulse {
-    from { background: rgba(255,255,255,0.85);}
-    to { background: #e0f7fa;}
+    from { background: #cbcccb;}
+    to { background: #fff7e1;}
 }
