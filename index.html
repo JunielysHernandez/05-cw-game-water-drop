@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Water Drop! The Water Catching Game</title>
+  <title>Water Drop!</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap" rel="stylesheet">
 </head>
@@ -31,8 +31,8 @@
     <p class="game-tagline">Catch the cute Aqua drops and avoid them hitting the floor!</p>
     <div class="score-panel">
       <div class="score-timer-group">
-        <div class="score"><span id="score">0</span> pts</div>
-        <div class="timer"><span id="time">30</span>s</div>
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="timer">Time: <span id="time">30</span>s</div>
       </div>
       <div class="score-btn-group">
         <button id="start-btn">Start Game</button>
@@ -43,18 +43,7 @@
     <div id="game-container">
       <img id="bucket" src="img/bucket.png" alt="Bucket">
     </div>
-    <button id="how-to-play-btn" class="info-btn">How to Play?</button>
-    <div id="how-to-play-modal" class="modal" style="display:none;">
-      <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2>How to Play</h2>
-        <ul>
-          <li>Move the bucket with your mouse or arrow keys.</li>
-          <li>Catch the Aqua drops to score points.</li>
-          <li>Try to beat your high score!</li>
-        </ul>
-      </div>
-    </div>
+    <!-- Win/Lose popup modal -->
     <div id="game-popup" class="modal" style="display:none;">
       <div class="modal-content" id="game-popup-content"></div>
     </div>
@@ -63,5 +52,6 @@
     <p>Learn more about <a href="https://www.charitywater.org/" target="_blank">charity: water</a>!</p>
   </footer>
   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>
