@@ -10,34 +10,47 @@
 <body>
   <div class="cw-navbar">
     <div class="cw-logo-box">
-      <img src="img/cw_logo-horizontal.png" alt="charity: water logo" class="cw-logo">
+      <a href="https://www.charitywater.org/main" target="_blank" rel="noopener">
+        <img src="img/cw_logo-horizontal.png" alt="charity: water logo" class="cw-logo">
+      </a>
     </div>
     <div class="cw-nav-links">
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Newsletter</a>
-      <a href="#">Funding</a>
-      <a href="#">Contact Us!</a>
+      <a href="https://www.charitywater.org/main" target="_blank" rel="noopener">Home</a>
+      <a href="https://www.charitywater.org/about" target="_blank" rel="noopener">About</a>
+      <a href="https://www.charitywater.org/mailing_list_subscribers/new" target="_blank" rel="noopener">Newsletter</a>
+      <a href="https://www.charitywater.org/donate/the-spring?_gl=1*14d1dk5*_up*MQ..*_gs*MQ..&gclid=EAIaIQobChMI2p_Q7eiFjgMVI0h_AB1WCxgmEAAYASAAEgI9BfD_BwE&gbraid=0AAAAADNj5D-o9aR305qcS8NULP9N6g3LL" target="_blank" rel="noopener">Funding</a>
+      <a href="https://www.charitywater.org/contact" target="_blank" rel="noopener">Contact Us!</a>
     </div>
     <div class="cw-search-wrapper">
-      <input type="text" class="cw-search" placeholder="Search...">
-      <button class="cw-search-btn" aria-label="Search">
-        <img src="img/cw_logo.png" alt="Search" class="cw-search-icon">
+      <input class="cw-search" type="text" placeholder="Search..." />
+      <button class="cw-search-btn" type="submit">
+        <img src="img/water-can-transparent.png" alt="Search" class="cw-search-icon" />
       </button>
     </div>
   </div>
   <div class="game-wrapper">
     <h1 class="game-title">Water Drop!</h1>
     <p class="game-tagline">Catch the cute Aqua drops and avoid them hitting the floor!</p>
-    <div class="score-panel">
-      <div class="score-timer-group">
-        <div class="score">Score: <span id="score">0</span></div>
-        <div class="timer">Time: <span id="time">30</span>s</div>
+    <div class="game-controls-row">
+      <div class="score-panel">
+        <div class="score-btn-group">
+          <button id="start-btn">Start Game</button>
+          <button id="pause-btn">Pause</button>
+          <button id="reset-btn">Reset</button>
+        </div>
+        <div class="score-timer-group">
+          <div class="score">Score: <span id="score">0</span></div>
+          <div class="timer">Time: <span id="time">30</span>s</div>
+        </div>
       </div>
-      <div class="score-btn-group">
-        <button id="start-btn">Start Game</button>
-        <button id="pause-btn">Pause</button>
-        <button id="reset-btn">Reset</button>
+      <div class="difficulty-panel">
+        <div class="objective" id="objective">Objective: Catch 20 drops before time runs out!</div>
+        <div class="difficulty-group">
+          <button class="difficulty-btn" data-mode="easy">Easy</button>
+          <button class="difficulty-btn" data-mode="medium">Medium</button>
+          <button class="difficulty-btn" data-mode="hard">Hard</button>
+          <button class="difficulty-btn" data-mode="challenging">Challenging</button>
+        </div>
       </div>
     </div>
     <div id="game-container">
@@ -47,12 +60,96 @@
     <div id="game-popup" class="modal" style="display:none;">
       <div class="modal-content" id="game-popup-content"></div>
     </div>
+    <div id="milestoneMessage" aria-live="polite" tabindex="0"></div>
   </div>
   <footer class="cw-footer">
     <p>Learn more about <a href="https://www.charitywater.org/" target="_blank">charity: water</a>!</p>
   </footer>
-  <!-- Confetti library for win celebration -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+  <style>
+    .game-controls-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 32px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .score-panel,
+    .difficulty-panel {
+        background: linear-gradient(90deg, #e0f7fa 60%, #8BD1CB 100%);
+        border: 2px solid #2E9DF7;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(46,157,247,0.10);
+        padding: 22px 38px;
+        min-width: 340px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto; /* <-- This ensures centering */
+    }
+
+    @media (max-width: 900px) {
+      .game-controls-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .score-panel,
+      .difficulty-panel {
+        max-width: 95vw;
+        min-width: 180px;
+        padding: 16px 8vw;
+        margin: 0 auto; /* Centered on mobile too */
+      }
+    }
+    
+    #bucket {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 72px;   /* Slightly bigger bucket */
+        height: auto;
+        z-index: 20;
+        user-select: none;
+        pointer-events: none;
+        transition: left 0.18s cubic-bezier(.4,1.4,.6,1);
+        filter: drop-shadow(0 4px 12px #2E9DF755);
+    }
+
+    #game-container {
+        position: relative;
+        width: 700px;
+        height: 350px;
+        margin: 40px auto 0 auto;
+        background: #e0f7fa;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 2.5px solid #2E9DF7;
+        box-sizing: border-box;
+    }
+
+    .game-title {
+      font-family: 'Avenir', 'Proxima Nova', Arial, sans-serif;
+      color: #2E9DF7;
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin-bottom: 0.2em;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 16px #b2ebf2, 0 1px 0 #fff;
+      background: linear-gradient(90deg, #2E9DF7 0%, #8BD1CB 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
 </body>
 </html>

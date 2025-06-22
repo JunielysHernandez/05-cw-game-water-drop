@@ -26,9 +26,13 @@ Fonts:
 
 body {
     font-family: 'Nunito Sans', Arial, sans-serif;
-    background: #e0f7fa;
+    background: #f7fafc;
+    color: #003366;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 body::before {
@@ -44,33 +48,27 @@ body::after {
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: #003366; /* Light blue transparent overlay */
+    background: #01376d; /* Light blue transparent overlay */
     opacity: 0.2;
 }
+.cw-navbar, .charity-box {
+    background: #FFE066;
+    color: #003366;
+    box-shadow: none;
+    border-bottom: 1.5px solid #e0e0e0;
+}
+
 .cw-navbar {
-    width: 100vw;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 0 0 0 0;
-    background: #FFC907;
-    box-shadow: 0 2px 8px 0 #fff7e1;
-    z-index: 100;
     height: 64px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .cw-logo-box {
-    /* Remove background and box-shadow */
-    padding: 8px 24px 8px 32px;
-    display: flex;
-    align-items: center;
-    height: 48px;
-    margin-left: 12px;
-    background: none;
-    box-shadow: none;
+    padding: 0;
+    margin-left: 0;
 }
 
 .cw-logo {
@@ -82,100 +80,103 @@ body::after {
 .cw-nav-links {
     display: flex;
     align-items: center;
-    gap: 18px;
-    margin-right: 32px;
+    gap: 24px;
+    margin-right: 0;
 }
 
 .cw-nav-links a {
-    text-decoration: none;
     color: #003366;
-    font-family: 'Nunito Sans', Comfortaa, Quicksand;
     font-weight: 700;
-    font-size: 1rem;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+    font-size: 1.05rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background 0.18s, color 0.18s;
 }
 
 .cw-nav-links a:hover {
-    background: #003366;
+    background: #2E9DF7;
     color: #fff;
 }
 
 .cw-search-wrapper {
     position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    margin-left: 0;
 }
 
 .cw-search {
-    padding: 6px 36px 6px 12px; /* Add right padding for the icon */
-    border: 1px solid #77A8BB;
-    border-radius: 6px;
+    padding: 10px 44px 10px 16px;
+    border: 1.5px solid #8BD1CB;
+    border-radius: 8px;
     font-size: 1rem;
+    background: #fff;
+    color: #003366;
+    transition: border 0.2s, box-shadow 0.2s;
+    width: 220px;
     outline: none;
-    transition: border 0.2s;
 }
 
 .cw-search:focus {
     border: 2px solid #FFC907;
+    box-shadow: 0 0 0 2px #ffe06655;
 }
 
 .cw-search-btn {
     position: absolute;
-    right: 4px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
-    height: 28px;
-    width: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 32px;
+    width: 32px;
+    transition: background 0.18s;
+    border-radius: 50%;
+}
+
+.cw-search-btn:hover, .cw-search-btn:focus {
+    background: #e0f7fa;
 }
 
 .cw-search-icon {
     height: 22px;
     width: 22px;
-    opacity: 0.7;
+    opacity: 0.85;
+    transition: opacity 0.18s;
+}
+
+.cw-search-btn:hover .cw-search-icon,
+.cw-search-btn:focus .cw-search-icon {
+    opacity: 1;
+    filter: brightness(1.2) drop-shadow(0 2px 4px #2E9DF755);
+    transform: scale(1.08);
+    transition: filter 0.18s, transform 0.18s;
 }
 
 button, .cw-search {
     font-family: inherit;
     font-size: 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     border: none;
-    padding: 10px 20px;
-    margin: 0 6px;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px #1a1a1a;
+    padding: 12px 24px;
+    margin: 0 4px;
+    background: #e0f7fa;
+    color: #003366;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    box-shadow: none;
+    font-weight: 700;
 }
 
 button:hover, .cw-search:focus {
-    background: #003366;
+    background: #2E9DF7;
     color: #fff;
     outline: none;
-}
-
-.game-wrapper {
-    margin-top: 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-}
-
-#game-container {
-    position: relative;
-    width: 700px;
-    height: 350px;
-    margin: 40px auto;
-    background: #e0f7fa;
-    border-radius: 18px;
-    overflow: hidden;
-    border: 2px solid #2E9DF7;
 }
 
 #start-btn {
@@ -194,6 +195,7 @@ button:hover, .cw-search:focus {
 }
 
 #pause-btn {
+    margin-left: 10px;
     background: #FFC907;
     color: #222;
     border: none;
@@ -221,23 +223,22 @@ button:hover, .cw-search:focus {
 }
 
 .score-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    background: #fff;
+    border: 1.5px solid #8BD1CB;
+    border-radius: 18px;
+    box-shadow: none;
+    padding: 28px 36px;
+    margin-bottom: 24px;
+    min-width: 280px;
+    max-width: 420px;
     text-align: center;
-    margin: 20px auto;
 }
 
 .score-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-    background: linear-gradient(90deg, #e0f7fa 60%, #8BD1CB 100%);
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(46,157,247,0.10);
-    padding: 18px 36px;
-    margin-bottom: 24px;
-    border: 2px solid #2E9DF7;
-    min-width: 340px;
-    max-width: 420px;
     text-align: center;
     margin: 20px auto;
 }
@@ -265,8 +266,23 @@ button:hover, .cw-search:focus {
 
 .score-btn-group {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.score-btn-group button {
+    background: linear-gradient(90deg, #FFC907 60%, #2E9DF7 100%);
+    color: #fff;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: background 0.18s, color 0.18s;
+}
+
+.score-btn-group button:hover,
+.score-btn-group button:focus {
+    background: linear-gradient(90deg, #2E9DF7 60%, #FFC907 100%);
+    color: #fff;
 }
 
 #start-btn, #pause-btn {
@@ -301,18 +317,37 @@ button:hover, .cw-search:focus {
 }
 
 .game-title {
-    font-size: 2.5rem;
-    color: #2E9DF7;
+    font-family: 'Avenir', 'Proxima Nova', Arial, sans-serif;
+    color: #003366;
+    font-size: 2.4rem;
+    font-weight: 800;
     margin-bottom: 0.2em;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 8px #b2ebf2;
+    letter-spacing: 1.5px;
+    margin-top: 18px;    /* was 32px, now a bit less */
+    margin-bottom: 12px;
 }
 
 .game-tagline {
-    font-size: 1.2rem;
-    color: #fed8c1;
-    margin-bottom: 1em;
+    font-size: 1.15rem;
+    color: #2E9DF7;
+    margin-bottom: 1.5em;
     font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.game-title,
+.game-tagline {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.instructions {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 @keyframes dropFall {
@@ -322,6 +357,19 @@ button:hover, .cw-search:focus {
     to {
         transform: translateY(520px); /* 600px container - 60px drop - 20px margin above bucket */
     }
+}
+
+#game-container {
+    position: relative;
+    width: 700px;
+    height: 350px;
+    margin: 40px auto 0 auto;
+    background: #e0f7fa;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2.5px solid #2E9DF7;
+    box-sizing: border-box;
+    padding-left: 0; /* Make sure this is 0 */
 }
 
 @media (max-width: 850px) {
@@ -372,46 +420,67 @@ button:hover, .cw-search:focus {
   }
 }
 
-#bucket {
-    position: absolute;
-    bottom: 10px;
-    width: 90px;
-    height: auto;
-    z-index: 20;
-    user-select: none;
-    pointer-events: none;
+.game-controls-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 32px;
+    width: 100%;
+    flex-wrap: wrap;
 }
 
-.water-drop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 60px;
-    height: 60px;
-    z-index: 10;
-    pointer-events: none;
-    user-select: none;
+.score-panel,
+.difficulty-panel {
+    background: #fff;
+    border: 1.5px solid #8BD1CB;
+    border-radius: 18px;
+    box-shadow: none;
+    padding: 28px 36px;
+    min-width: 280px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.splash {
-    position: absolute;
-    width: 40px;
-    height: 18px;
-    left: 0;
-    bottom: 0;
-    background: #8bd1cb;
-    border-radius: 50% 50% 60% 60%;
-    box-shadow: 0 2px 8px 2px #2e9df7aa;
-    pointer-events: none;
-    z-index: 20;
-    animation: splashAnim 0.5s linear forwards;
-    opacity: 0.8;
+.score-panel {
+    gap: 18px;
 }
 
-@keyframes splashAnim {
-    0% { opacity: 1; transform: scale(0.5) translateY(0); }
-    80% { opacity: 1; transform: scale(1.2) translateY(-10px);}
-    100% { opacity: 0; transform: scale(1) translateY(0);}
+.difficulty-panel .objective {
+    margin-bottom: 16px;
+    font-size: 1.13rem;
+    color: #003366;
+    font-weight: 700;
+    text-align: center;
+}
+
+.difficulty-group {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* Responsive: stack as columns on small screens */
+@media (max-width: 900px) {
+  .game-controls-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .score-panel,
+  .difficulty-panel {
+    max-width: 95vw;
+    min-width: 180px;
+    padding: 16px 8vw;
+  }
 }
 
 .modal {
@@ -429,7 +498,7 @@ button:hover, .cw-search:focus {
     border-radius: 12px;
     max-width: 350px;
     text-align: center;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    box-shadow: none;
     position: relative;
 }
 .close-modal {
@@ -476,6 +545,45 @@ button:hover, .cw-search:focus {
     color: #fff;
 }
 
+#milestoneMessage {
+    display: block;
+    min-height: 2.5em;
+    margin: 18px auto 0 auto;
+    padding: 12px 24px;
+    background: #fffbe6;
+    color: #003366;
+    border: 2.5px solid #FFC907;
+    box-shadow: 0 2px 12px #ffc90733;
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-align: center;
+    transition: background 0.3s, color 0.3s, border 0.3s;
+    outline: none;
+}
+#milestoneMessage:focus {
+    outline: 3px solid #2E9DF7;
+}
+#milestoneMessage:empty {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}
+#milestoneMessage {
+    visibility: hidden;
+}
+#milestoneMessage:not(:empty) {
+    visibility: visible;
+}
+@media (max-width: 600px) {
+    #milestoneMessage {
+        font-size: 1rem;
+        padding: 10px 8px;
+    }
+}
+
 @keyframes bucketBounce {
     0% { transform: scale(1);}
     30% { transform: scale(1.1);}
@@ -507,13 +615,77 @@ button:hover, .cw-search:focus {
     pointer-events: none;
     user-select: none;
     /* No background or border-radius here! */
-    #bucket {
+    filter: none;
+}
+
+#bucket {
     position: absolute;
     bottom: 10px;
-    width: 90px;
+    left: 0;
+    width: 72px;
     height: auto;
     z-index: 20;
     user-select: none;
     pointer-events: none;
+    transition: left 0.18s cubic-bezier(.4,1.4,.6,1);
+    filter: none;
 }
+
+.water-drop, #bucket {
+    will-change: transform, left, top;
+    backface-visibility: hidden;
+}
+
+.difficulty-btn[data-mode="easy"] {
+    background: #4FCB53;
+    color: #fff;
+}
+.difficulty-btn[data-mode="medium"] {
+    background: #FFC907;
+    color: #003366;
+}
+.difficulty-btn[data-mode="hard"] {
+    background: #FF902A;
+    color: #fff;
+}
+.difficulty-btn[data-mode="challenging"] {
+    background: #F5402C;
+    color: #fff;
+}
+
+.difficulty-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-size: 1.08rem;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: none;
+    transition: transform 0.12s, background 0.2s, color 0.2s;
+    outline: none;
+    margin: 0 2px;
+}
+
+.difficulty-btn.active,
+.difficulty-btn:focus {
+    box-shadow: 0 4px 16px rgba(46,157,247,0.18);
+    transform: scale(1.08);
+    outline: none;
+}
+
+.difficulty-btn:hover {
+    filter: brightness(1.1) contrast(1.2);
+    transform: translateY(-2px) scale(1.06);
+}
+
+.game-wrapper {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 36px;   /* was 60px, now a bit less */
+    padding-bottom: 60px;
+    width: 100%;
 }

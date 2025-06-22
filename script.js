@@ -10,7 +10,21 @@ let timeLeft = 30;
 
 let windActive = false;
 let windDirection = 0;
-let bucketX = 0.5;
+let bucketX = 0.5; // 0 (left) to 1 (right)
+
+// --- DIFFICULTY SETTINGS ---
+let dropIntervalMs = 1000;
+let dropFallDuration = 3000;
+let scoreToWin = 30;
+let timeLimit = 30;
+let currentDifficulty = 'medium';
+
+const difficultySettings = {
+    easy:        { dropInterval: 1200, dropDuration: 3500, score: 20, time: 40 },
+    medium:      { dropInterval: 1000, dropDuration: 3000, score: 30, time: 30 },
+    hard:        { dropInterval: 700,  dropDuration: 2200, score: 40, time: 25 },
+    challenging: { dropInterval: 500,  dropDuration: 1600, score: 50, time: 20 }
+};
 
 // --- DOM ELEMENTS ---
 const gameContainer = document.getElementById('game-container');
@@ -18,6 +32,33 @@ const startBtn = document.getElementById('start-btn');
 const pauseBtn = document.getElementById('pause-btn');
 const resetBtn = document.getElementById('reset-btn');
 const bucket = document.getElementById("bucket");
+
+// --- DIFFICULTY BUTTONS ---
+document.querySelectorAll('.difficulty-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentDifficulty = this.dataset.mode;
+        const setting = difficultySettings[currentDifficulty];
+        dropIntervalMs = setting.dropInterval;
+        dropFallDuration = setting.dropDuration;
+        scoreToWin = setting.score;
+        timeLimit = setting.time;
+        document.getElementById("time").textContent = timeLimit;
+        document.getElementById("score").textContent = "0";
+        missedDrops = 0;
+        timeLeft = timeLimit;
+        updateObjective();
+        resetGameState();
+    });
+});
+document.querySelector('.difficulty-btn[data-mode="medium"]').classList.add('active');
+
+// --- OBJECTIVE DISPLAY ---
+function updateObjective() {
+    document.getElementById("objective").textContent =
+        `Objective: Catch ${scoreToWin} drops before time runs out!`;
+}
 
 // --- GAME CONTROL BUTTONS ---
 
@@ -31,13 +72,20 @@ pauseBtn.addEventListener("click", function() {
         clearInterval(timerInterval);
         this.textContent = "Resume";
     } else {
-        dropMaker = setInterval(createDrop, 1000);
+        dropMaker = setInterval(createDrop, dropIntervalMs);
         timerInterval = setInterval(updateTimer, 1000);
-                this.textContent = "Pause";
-            }
-        });
+        this.textContent = "Pause";
+    }
+});
 
 resetBtn.addEventListener("click", function() {
+    resetGameState();
+    updateObjective();
+});
+
+// --- GAME LOGIC ---
+
+function resetGameState() {
     gameRunning = false;
     gamePaused = false;
     clearInterval(dropMaker);
@@ -45,20 +93,19 @@ resetBtn.addEventListener("click", function() {
     clearTimeout(windTimer);
     document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
     document.getElementById("score").textContent = "0";
-    document.getElementById("time").textContent = "30";
+    document.getElementById("time").textContent = timeLimit;
     missedDrops = 0;
+    timeLeft = timeLimit;
     bucketX = 0.5;
     updateBucketPosition();
-});
-
-// --- GAME LOGIC ---
+}
 
 function startGame() {
     if (gameRunning) return;
     gameRunning = true;
     gamePaused = false;
     missedDrops = 0;
-    timeLeft = 30;
+    timeLeft = timeLimit;
     document.getElementById("score").textContent = "0";
     document.getElementById("time").textContent = timeLeft;
     document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
@@ -67,9 +114,10 @@ function startGame() {
     clearTimeout(windTimer);
     timerInterval = setInterval(updateTimer, 1000);
     createDrop();
-    dropMaker = setInterval(createDrop, 1000);
+    dropMaker = setInterval(createDrop, dropIntervalMs);
     scheduleWind();
     pauseBtn.textContent = "Pause";
+    updateObjective();
 }
 
 function updateTimer() {
@@ -98,7 +146,7 @@ function createDrop() {
     gameContainer.appendChild(drop);
 
     let start = null;
-    const duration = 3000;
+    const duration = dropFallDuration;
     const endY = gameContainer.offsetHeight - size - 10;
 
     function animateDrop(timestamp) {
@@ -125,6 +173,7 @@ function createDrop() {
             let scoreElem = document.getElementById("score");
             let score = parseInt(scoreElem.textContent, 10) || 0;
             scoreElem.textContent = score + 1;
+            checkMilestones(score + 1); // <-- Add this line
             return;
         }
 
@@ -192,10 +241,10 @@ function endGameByScore() {
     clearTimeout(windTimer);
     document.querySelectorAll('.water-drop').forEach(drop => drop.remove());
     let score = parseInt(document.getElementById("score").textContent, 10) || 0;
-    if (score >= 20) {
+    if (score >= scoreToWin) {
         showWinCelebration();
     } else {
-        showLosePopup("Time's up! You needed 20 points to win. Try again!");
+        showLosePopup("Time's up! You needed " + scoreToWin + " points to win. Try again!");
     }
 }
 
@@ -241,44 +290,48 @@ function hideWindMessage() {
 
 // --- BUCKET MOVEMENT ---
 
-// MOUSE MOVEMENT
+// MOUSE MOVEMENT (bucket follows mouse by left edge, always fully visible)
 gameContainer.addEventListener("mousemove", (e) => {
     const rect = gameContainer.getBoundingClientRect();
     const bucketWidth = bucket.offsetWidth;
     const containerWidth = gameContainer.offsetWidth;
     const maxX = containerWidth - bucketWidth;
 
-    // Center the bucket under the mouse
+    // Center bucket on mouse
     let x = e.clientX - rect.left - bucketWidth / 2;
-
-    // Clamp x between 0 and maxX
     x = Math.max(0, Math.min(x, maxX));
+    bucket.style.left = `${x}px`;
 
-    // Store bucketX as a fraction between 0 and 1
-    bucketX = x / maxX;
-
-    updateBucketPosition();
+    // Update bucketX for keyboard sync:
+    bucketX = maxX === 0 ? 0 : x / maxX;
 });
 
-// KEYBOARD MOVEMENT (unchanged, but ensure bucketX stays between 0 and 1)
+// KEYBOARD MOVEMENT
 document.addEventListener("keydown", (e) => {
-    const step = 0.05;
+    const bucketWidth = bucket.offsetWidth;
+    const containerWidth = gameContainer.offsetWidth;
+    const maxX = containerWidth - bucketWidth;
+    let x = bucketX * maxX;
+    const stepPx = 24; // Move by 24 pixels per key press
     if (e.key === "ArrowLeft") {
-        bucketX = Math.max(0, bucketX - step);
+        x = Math.max(0, x - stepPx);
     } else if (e.key === "ArrowRight") {
-        bucketX = Math.min(1, bucketX + step);
+        x = Math.min(maxX, x + stepPx);
+    } else {
+        return;
     }
+    bucketX = maxX === 0 ? 0 : x / maxX;
     updateBucketPosition();
 });
 
 // UPDATE BUCKET POSITION
 function updateBucketPosition() {
-    const containerWidth = gameContainer.offsetWidth;
     const bucketWidth = bucket.offsetWidth;
+    const containerWidth = gameContainer.offsetWidth;
     const maxX = containerWidth - bucketWidth;
-    const x = bucketX * maxX;
+    bucketX = Math.max(0, Math.min(bucketX, 1));
+    const x = maxX * bucketX;
     bucket.style.left = `${x}px`;
-    bucket.style.transform = "";
 }
 window.addEventListener("resize", updateBucketPosition);
 window.addEventListener("DOMContentLoaded", updateBucketPosition);
@@ -297,7 +350,7 @@ function showWinCelebration() {
     const content = document.getElementById('game-popup-content');
     content.innerHTML = `
         <h2>Congratulations! You win! 🎉</h2>
-        <p>Make sure to check our <a href="#newsletter" style="color:#2E9DF7;">newsletter</a> and our <a href="#funding" style="color:#FFC907;">funding</a>!</p>
+        <p>Objective complete: ${scoreToWin} drops caught!</p>
         <button id="close-popup-btn" style="margin-top:18px;padding:10px 24px;background:#2E9DF7;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">Close</button>
     `;
     popup.style.display = 'flex';
@@ -313,39 +366,64 @@ function showLosePopup(message) {
         <button id="restart-btn" style="margin-top:18px;padding:10px 24px;background:#FFC907;color:#222;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">Restart</button>
     `;
     popup.style.display = 'flex';
-        document.getElementById('restart-btn').onclick = () => {
-            popup.style.display = 'none';
-            resetBtn.click();
-        };
-    }
-gameContainer.addEventListener("mousemove", (e) => {
-    const rect = gameContainer.getBoundingClientRect();
-    const bucketWidth = bucket.offsetWidth;
-    const containerWidth = gameContainer.offsetWidth;
-    const maxX = containerWidth - bucketWidth;
+    document.getElementById('restart-btn').onclick = () => {
+        popup.style.display = 'none';
+        resetBtn.click();
+    };
+}
 
-    // Center the bucket under the mouse
-    let x = e.clientX - rect.left - bucketWidth / 2;
+// --- MILESTONE CHECKS ---
 
-    // Clamp x between 0 and maxX
-    x = Math.max(0, Math.min(x, maxX));
+const milestoneData = {
+  easy: {
+    milestones: [5, 10, 15, 20],
+    messages: [
+      "🎉 Great start! 5 drops collected!",
+      "🔥 You’re halfway there! 10 drops!",
+      "💪 Almost done! 15 drops!",
+      "🏆 You did it! 20 drops caught!"
+    ]
+  },
+  medium: {
+    milestones: [10, 20, 25, 30],
+    messages: [
+      "🎉 Great start! 10 drops collected!",
+      "🔥 You’re halfway there! 20 drops!",
+      "💪 Almost done! 25 drops!",
+      "🏆 You did it! 30 drops caught!"
+    ]
+  },
+  hard: {
+    milestones: [10, 20, 30, 40],
+    messages: [
+      "🎉 Great start! 10 drops collected!",
+      "🔥 You’re halfway there! 20 drops!",
+      "💪 Almost done! 30 drops!",
+      "🏆 You did it! 40 drops caught!"
+    ]
+  },
+  challenging: {
+    milestones: [10, 20, 35, 50],
+    messages: [
+      "🎉 Great start! 10 drops collected!",
+      "🔥 You’re halfway there! 20 drops!",
+      "💪 Almost done! 35 drops!",
+      "🏆 You did it! 50 drops caught!"
+    ]
+  }
+};
 
-    // Store bucketX as a fraction between 0 and 1
-    bucketX = x / maxX;
-
-    updateBucketPosition();
-});function updateBucketPosition() {
-    const containerWidth = gameContainer.offsetWidth;
-    const bucketWidth = bucket.offsetWidth;
-    const maxX = containerWidth - bucketWidth;
-    const x = bucketX * maxX;
-    bucket.style.left = `${x}px`;
-    bucket.style.transform = "";
-}function updateBucketPosition() {
-    const containerWidth = gameContainer.offsetWidth;
-    const bucketWidth = bucket.offsetWidth;
-    const maxX = containerWidth - bucketWidth;
-    const x = bucketX * maxX;
-    bucket.style.left = `${x}px`;
-    bucket.style.transform = "";
+function checkMilestones(score) {
+  const { milestones, messages } = milestoneData[currentDifficulty];
+  const index = milestones.indexOf(score);
+  if (index !== -1) {
+    milestoneMsg.textContent = messages[index];
+    milestoneMsg.style.visibility = "visible";
+    milestoneMsg.focus();
+    setTimeout(() => {
+      milestoneMsg.textContent = "";
+      milestoneMsg.style.visibility = "hidden";
+      milestoneMsg.blur();
+    }, 3000);
+  }
 }
