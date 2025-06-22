@@ -72,7 +72,7 @@ pauseBtn.addEventListener("click", function() {
         clearInterval(timerInterval);
         this.textContent = "Resume";
     } else {
-        dropMaker = setInterval(createDrop, dropIntervalMs);
+        dropMaker = setInterval(spawnDropsForLevel, dropIntervalMs);
         timerInterval = setInterval(updateTimer, 1000);
         this.textContent = "Pause";
     }
@@ -113,8 +113,8 @@ function startGame() {
     clearInterval(dropMaker);
     clearTimeout(windTimer);
     timerInterval = setInterval(updateTimer, 1000);
-    createDrop();
-    dropMaker = setInterval(createDrop, dropIntervalMs);
+    spawnDropsForLevel();
+    dropMaker = setInterval(spawnDropsForLevel, dropIntervalMs);
     scheduleWind();
     pauseBtn.textContent = "Pause";
     updateObjective();
@@ -291,6 +291,7 @@ function hideWindMessage() {
 // --- BUCKET MOVEMENT ---
 
 // MOUSE MOVEMENT (bucket follows mouse by left edge, always fully visible)
+let lastMove = 0;
 gameContainer.addEventListener("mousemove", (e) => {
     const rect = gameContainer.getBoundingClientRect();
     const bucketWidth = bucket.offsetWidth;
@@ -306,22 +307,34 @@ gameContainer.addEventListener("mousemove", (e) => {
     bucketX = maxX === 0 ? 0 : x / maxX;
 });
 
-// KEYBOARD MOVEMENT
+// KEYBOARD MOVEMENT (continuous and smooth)
+let moveInterval = null;
+let moveDirection = 0;
+
 document.addEventListener("keydown", (e) => {
-    const bucketWidth = bucket.offsetWidth;
-    const containerWidth = gameContainer.offsetWidth;
-    const maxX = containerWidth - bucketWidth;
-    let x = bucketX * maxX;
-    const stepPx = 24; // Move by 24 pixels per key press
-    if (e.key === "ArrowLeft") {
-        x = Math.max(0, x - stepPx);
-    } else if (e.key === "ArrowRight") {
-        x = Math.min(maxX, x + stepPx);
-    } else {
-        return;
+    if (moveInterval) return; // Prevent multiple intervals
+    if (e.key === "ArrowLeft") moveDirection = -1;
+    else if (e.key === "ArrowRight") moveDirection = 1;
+    else return;
+
+    moveInterval = setInterval(() => {
+        const bucketWidth = bucket.offsetWidth;
+        const containerWidth = gameContainer.offsetWidth;
+        const maxX = containerWidth - bucketWidth;
+        let x = bucketX * maxX;
+        const stepPx = 6; // Even finer control
+        x = Math.max(0, Math.min(maxX, x + moveDirection * stepPx));
+        bucketX = maxX === 0 ? 0 : x / maxX;
+        updateBucketPosition();
+    }, 12); // Fast repeat for smoothness
+});
+
+document.addEventListener("keyup", (e) => {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        clearInterval(moveInterval);
+        moveInterval = null;
+        moveDirection = 0;
     }
-    bucketX = maxX === 0 ? 0 : x / maxX;
-    updateBucketPosition();
 });
 
 // UPDATE BUCKET POSITION
@@ -416,14 +429,29 @@ const milestoneData = {
 function checkMilestones(score) {
   const { milestones, messages } = milestoneData[currentDifficulty];
   const index = milestones.indexOf(score);
-  if (index !== -1) {
+  const milestoneMsg = document.getElementById("milestoneMessage");
+  if (index !== -1 && milestoneMsg) {
     milestoneMsg.textContent = messages[index];
+    milestoneMsg.classList.add("visible");
     milestoneMsg.style.visibility = "visible";
-    milestoneMsg.focus();
     setTimeout(() => {
-      milestoneMsg.textContent = "";
-      milestoneMsg.style.visibility = "hidden";
-      milestoneMsg.blur();
-    }, 3000);
+      milestoneMsg.classList.remove("visible");
+      setTimeout(() => {
+        milestoneMsg.textContent = "";
+        milestoneMsg.style.visibility = "hidden";
+      }, 400); // matches the CSS transition
+    }, 2000); // visible for 2 seconds
   }
+}
+
+// --- SPAWN MORE DROPS BASED ON DIFFICULTY ---
+function spawnDropsForLevel() {
+    let drops = 1;
+    if (currentDifficulty === "easy") drops = 0.5;
+    if (currentDifficulty === "medium") drops = 2;
+    if (currentDifficulty === "hard") drops = 3;
+    if (currentDifficulty === "challenging") drops = 5;
+    for (let i = 0; i < drops; i++) {
+        createDrop();
+    }
 }

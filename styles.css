@@ -370,6 +370,7 @@ button:hover, .cw-search:focus {
     border: 2.5px solid #2E9DF7;
     box-sizing: border-box;
     padding-left: 0; /* Make sure this is 0 */
+    padding-bottom: 24px;
 }
 
 @media (max-width: 850px) {
@@ -546,42 +547,31 @@ button:hover, .cw-search:focus {
 }
 
 #milestoneMessage {
-    display: block;
-    min-height: 2.5em;
-    margin: 18px auto 0 auto;
-    padding: 12px 24px;
-    background: #fffbe6;
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 220px;
+    max-width: 80vw;
+    padding: 12px 28px;
+    background: rgba(255, 255, 224, 0.92); /* soft yellow, semi-transparent */
     color: #003366;
-    border: 2.5px solid #FFC907;
-    box-shadow: 0 2px 12px #ffc90733;
-    font-size: 1.25rem;
-    font-weight: 800;
+    border: 2px solid #FFC907;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
     text-align: center;
-    transition: background 0.3s, color 0.3s, border 0.3s;
-    outline: none;
-}
-#milestoneMessage:focus {
-    outline: 3px solid #2E9DF7;
-}
-#milestoneMessage:empty {
-    border: none;
-    box-shadow: none;
-    background: transparent;
-    min-height: 0;
-    padding: 0;
-    margin: 0;
-}
-#milestoneMessage {
+    box-shadow: 0 2px 12px #ffc90722;
+    letter-spacing: 0.5px;
+    z-index: 1001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
     visibility: hidden;
 }
-#milestoneMessage:not(:empty) {
+#milestoneMessage.visible {
+    opacity: 1;
     visibility: visible;
-}
-@media (max-width: 600px) {
-    #milestoneMessage {
-        font-size: 1rem;
-        padding: 10px 8px;
-    }
 }
 
 @keyframes bucketBounce {
@@ -627,8 +617,12 @@ button:hover, .cw-search:focus {
     z-index: 20;
     user-select: none;
     pointer-events: none;
-    transition: left 0.18s cubic-bezier(.4,1.4,.6,1);
+    transition: none;
     filter: none;
+}
+
+#bucket {
+    transition: left 0.04s cubic-bezier(.4,1.4,.6,1);
 }
 
 .water-drop, #bucket {
